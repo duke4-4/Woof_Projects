@@ -1,0 +1,42 @@
+// Boss Motion
+
+forever(() => {
+  boss.x += direction * speed
+  if (boss.x > maxX || boss.x < minX) {
+    direction *= -1
+  }
+})
+
+// Player 1 Lasers
+
+onKeyDown(() => {
+  if (keysDown.includes('SPACE')) {
+    var laser = new Image({
+      url: "./docs/images/boss-laser.png",
+      width: 20,
+      height: 60,
+    })
+    laser.y = player.y
+    laser.x = player.x
+    lasers.push(laser)
+  }
+})
+forever(() => {
+  lasers.forEach(laser => {
+    laser.y += 10
+    if (laser.y > maxY) {
+      laser.delete()
+      lasers.remove(laser)
+    }
+    if (laser.touching(boss)) {
+      laser.delete()
+      lasers.remove(laser)
+      bosslife.width -= 20
+    }
+    if (bosslife.width === 0) {
+      laser.delete()
+      lasers.remove(laser)
+      freeze()
+    }
+  })
+})
